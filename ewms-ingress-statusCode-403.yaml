@@ -1,0 +1,34 @@
+# 报警模板
+alertType: filter_field-count-over-threshold
+# 观察者名字
+watcherName: ewms-ingress-statusCode-403
+# 报警标题
+title: to many 403 in 15m 
+# 索引目录
+indices:
+  - nginx-ingress-controller-*
+# 数据查询规则
+matches:
+    - query_string:
+        "default_field": "domain"
+        "query": "cn-ewms-lg-qa.pg.com OR cn-ewms-hp-qa.pg.com"
+    - match:
+        "status": "403"
+    - range:
+        "@timestamp":
+          gt: now-15m
+          lt: now
+# 间隔15分钟触发检查
+interval: 15m
+# 数据比较类型
+compare_type: ">="
+# 每次检查需要出现1次以上会触发报警
+threshold: 1
+# 项目名
+project: ewms
+# 发送微信
+send_to_wechat: true
+# 发送邮箱
+send_to_email: true
+# 安全级别
+severity: p3
